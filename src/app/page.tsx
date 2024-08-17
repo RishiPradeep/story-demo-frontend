@@ -22,7 +22,7 @@ export default function Home() {
       const response = await loginOrCreate(email, username);
       if (response.message === "Created" || response.message === "ok") {
         router.push(
-          `/space?email=${encodeURIComponent(
+          `/stories?email=${encodeURIComponent(
             email ? email : ""
           )}&username=${encodeURIComponent(username ? username : "")}`
         );

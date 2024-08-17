@@ -11,6 +11,7 @@ import { useSearchParams } from "next/navigation";
 import { getDetails } from "@/apis/getDetails";
 import { makeSubmit } from "@/apis/makeSubmit";
 import CalendarHeatMap from "@/components/calenderHeatMap";
+import { createStory } from "@/apis/createStory";
 
 export default function Space() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function Space() {
   const [highestStreak, setHighestStreak] = useState<number | null>(0);
   const [visibility, setVisibility] = useState<string>("Public");
   const [heatmap, setHeatmap] = useState([]);
+  const [mode, setMode] = useState<string>("Create");
 
   const searchParams = useSearchParams();
 
@@ -32,6 +34,7 @@ export default function Space() {
         try {
           // Replace with your async function to get details
           const data = await getDetails(email);
+          console.log(data);
           setCurrentStreak(data.currentStreak);
           setHighestStreak(data.highestStreak);
           setHeatmap(data.heatMap);
@@ -53,7 +56,7 @@ export default function Space() {
 
     // Call the fetchData function with email
     fetchData(email);
-  }, [searchParams, email]);
+  }, [searchParams]);
 
   const handleLogout = async () => {
     try {
@@ -65,7 +68,13 @@ export default function Space() {
   };
 
   const handleSave = async () => {
-    const response = await makeSubmit(email);
+    await createStory(email, title, story, visibility);
+    await makeSubmit(email);
+    router.push(
+      `/stories?email=${encodeURIComponent(
+        email ? email : ""
+      )}&username=${encodeURIComponent(username ? username : "")}`
+    );
   };
 
   return (
@@ -110,7 +119,7 @@ export default function Space() {
         </div>
         <div className="flex gap-4 mt-4">
           <Button onClick={handleSave} className="w-20 bg-green-300">
-            Save
+            Create
           </Button>
           <Button
             onClick={() => {

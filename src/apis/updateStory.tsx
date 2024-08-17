@@ -1,15 +1,16 @@
 // src/api.tsx
 import axios from "axios";
 
-export const loginOrCreate = async (
-  email: string | null,
-  username: string | null
+export const updateStory = async (
+  id: string,
+  title: string | null,
+  story: string | null
 ) => {
   try {
-    const response = await axios.post(`http://localhost:3000/main`, {
-      email: email,
-      username: username,
-      password: "1234",
+    const response = await axios.post(`http://localhost:3000/story/update`, {
+      id: parseInt(id),
+      story: story,
+      title: title,
     });
     return response.data;
   } catch (error) {
