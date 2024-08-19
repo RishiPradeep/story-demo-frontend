@@ -6,7 +6,7 @@ export const loginOrCreate = async (
   username: string | null
 ) => {
   try {
-    const response = await axios.post(`http://localhost:3000/main`, {
+    const response = await axios.post(`http://13.232.39.125:3000/main`, {
       email: email,
       username: username,
       password: "1234",

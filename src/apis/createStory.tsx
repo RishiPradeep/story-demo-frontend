@@ -8,7 +8,7 @@ export const createStory = async (
   visibility: string | null
 ) => {
   try {
-    const response = await axios.post(`http://localhost:3000/story`, {
+    const response = await axios.post(`http://13.232.39.125:3000/story`, {
       email: email,
       title: title,
       story: story,
