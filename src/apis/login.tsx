@@ -3,10 +3,10 @@ import axios from "axios";
 
 export const loginOrCreate = async (
   email: string | null,
-  username: string | null
+  username: string | null,
 ) => {
   try {
-    const response = await axios.post(`http://13.232.39.125:3000/main`, {
+    const response = await axios.post(`https://rishilearn.xyz/main`, {
       email: email,
       username: username,
       password: "1234",

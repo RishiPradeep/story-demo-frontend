@@ -5,10 +5,10 @@ export const createStory = async (
   email: string | null,
   title: string | null,
   story: string | null,
-  visibility: string | null
+  visibility: string | null,
 ) => {
   try {
-    const response = await axios.post(`http://13.232.39.125:3000/story`, {
+    const response = await axios.post(`https://rishilearn.xyz/story`, {
       email: email,
       title: title,
       story: story,

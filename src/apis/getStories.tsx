@@ -3,9 +3,7 @@ import axios from "axios";
 
 export const getStories = async (email: string | null) => {
   try {
-    const response = await axios.get(
-      `http://13.232.39.125:3000/story/${email}`
-    );
+    const response = await axios.get(`https://rishilearn.xyz/story/${email}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching user info:", error);
