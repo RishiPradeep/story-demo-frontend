@@ -60,16 +60,16 @@ export default function Stories() {
   const handleCreate = () => {
     router.push(
       `/createSpace?email=${encodeURIComponent(
-        email ? email : ""
-      )}&username=${encodeURIComponent(username ? username : "")}`
+        email ? email : "",
+      )}&username=${encodeURIComponent(username ? username : "")}`,
     );
   };
 
   const handleClick = (id: number) => {
     router.push(
       `/updateSpace?email=${encodeURIComponent(
-        email ? email : ""
-      )}&username=${encodeURIComponent(username ? username : "")}&id=${id}`
+        email ? email : "",
+      )}&username=${encodeURIComponent(username ? username : "")}&id=${id}`,
     );
   };
 
@@ -95,7 +95,7 @@ export default function Stories() {
             </div>
           ))}
         </div>
-        <div className="mt-8 flex w-fit">
+        <div className="mt-8 flex w-fit flex-col md:flex-row">
           <div className="flex gap-8 border-slate-100 border-2 bg-secondary p-4 rounded-lg">
             <div className="flex flex-col items-center">
               <div>Total Stories</div>

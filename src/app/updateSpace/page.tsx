@@ -71,8 +71,8 @@ export default function UpdateSpace() {
     await updateStory(id, title, story);
     router.push(
       `/stories?email=${encodeURIComponent(
-        email ? email : ""
-      )}&username=${encodeURIComponent(username ? username : "")}`
+        email ? email : "",
+      )}&username=${encodeURIComponent(username ? username : "")}`,
     );
   };
 
@@ -80,7 +80,7 @@ export default function UpdateSpace() {
     <Suspense fallback={<div>Loading...</div>}>
       <div className="flex justify-center p-4">
         <div className="container mx-auto">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col md:flex-row justify-between items-center">
             <h1 className="text-4xl font-bold">Welcome {username}</h1>
             <div className="flex gap-4">
               <SelectVisibility setVisibility={setVisibility} />

@@ -23,8 +23,8 @@ export default function Home() {
       if (response.message === "Created" || response.message === "ok") {
         router.push(
           `/stories?email=${encodeURIComponent(
-            email ? email : ""
-          )}&username=${encodeURIComponent(username ? username : "")}`
+            email ? email : "",
+          )}&username=${encodeURIComponent(username ? username : "")}`,
         );
       }
     } catch (error) {
