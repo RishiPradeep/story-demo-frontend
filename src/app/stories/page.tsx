@@ -6,9 +6,17 @@ import { getStories } from "@/apis/getStories";
 import { Button } from "@/components/ui/button";
 import { FaUnlock } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
-import CalendarHeatMap from "@/components/calenderHeatMap";
+import { CalendarHeatmap } from "@/components/ui/calender-heatmap";
+import {
+  cn,
+  currentMonthFirstDate,
+  currentMonthLastDate,
+  randomDate,
+} from "@/lib/utils";
+
 import { getDetails } from "@/apis/getDetails";
 import { Suspense } from "react";
+import { BsCheckLg } from "react-icons/bs";
 
 export default function Stories() {
   const router = useRouter();
@@ -21,6 +29,31 @@ export default function Stories() {
   const [storyCount, setStoryCount] = useState<number | null>(0);
   const [heatmap, setHeatmap] = useState([]);
 
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    };
+    console.log(date.toLocaleDateString("en-US", options));
+    return date.toLocaleDateString("en-US", options);
+  }
+
+  function convertData(inputArray: any) {
+    console.log("INside function", inputArray);
+    console.log(
+      inputArray.map((item: any) => ({
+        date: formatDate(item.date),
+        weight: item.commits,
+      })),
+    );
+    return inputArray.map((item: any) => ({
+      date: formatDate(item.date),
+      weight: item.commits,
+    }));
+  }
+
   useEffect(() => {
     // Function to fetch additional data
     const getData = async (email: string | null) => {
@@ -29,12 +62,13 @@ export default function Stories() {
           // Replace with your async function to get details
           const data = await getStories(email);
           const dataDetails = await getDetails(email);
-          console.log(dataDetails);
           setCurrentStreak(dataDetails.currentStreak);
           setHighestStreak(dataDetails.highestStreak);
           setStoryCount(dataDetails.storyCount._count.stories);
-          setHeatmap(dataDetails.heatMap);
+          const convertedHeatmap = convertData(dataDetails.heatMap);
           setStories(data);
+          setHeatmap(convertedHeatmap);
+          console.log(convertedHeatmap);
         } catch (error) {
           console.error("Error fetching details:", error);
         }
@@ -73,6 +107,20 @@ export default function Stories() {
     );
   };
 
+  const GithubStreak = [
+    "text-white hover:text-white bg-green-700 hover:bg-green-700",
+    "text-white hover:text-white bg-green-500 hover:bg-green-500",
+    "text-white hover:text-white bg-green-400 hover:bg-green-400",
+  ];
+
+  console.log("Heatmap in Render:", heatmap);
+  console.log(
+    heatmap.map((item: any) => ({
+      date: new Date(item.date),
+      weight: item.weight,
+    })),
+  );
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="container mx-auto">
@@ -110,10 +158,18 @@ export default function Stories() {
               <div>{highestStreak}</div>
             </div>
           </div>
-          <div className="ml-8 w-[600px]">
-            <CalendarHeatMap heatmap={heatmap}> </CalendarHeatMap>
-          </div>
         </div>
+        {heatmap.length > 0 && (
+          <CalendarHeatmap
+            className="mt-8"
+            numberOfMonths={3}
+            variantClassnames={GithubStreak}
+            weightedDates={heatmap.map((item: any) => ({
+              date: new Date(item.date),
+              weight: item.weight,
+            }))}
+          />
+        )}
       </div>
     </Suspense>
   );
