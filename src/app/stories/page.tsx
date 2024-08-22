@@ -7,13 +7,6 @@ import { Button } from "@/components/ui/button";
 import { FaUnlock } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import { CalendarHeatmap } from "@/components/ui/calender-heatmap";
-import {
-  cn,
-  currentMonthFirstDate,
-  currentMonthLastDate,
-  randomDate,
-} from "@/lib/utils";
-
 import { getDetails } from "@/apis/getDetails";
 import { Suspense } from "react";
 import { BsCheckLg } from "react-icons/bs";
@@ -36,18 +29,10 @@ export default function Stories() {
       month: "short",
       day: "numeric",
     };
-    console.log(date.toLocaleDateString("en-US", options));
     return date.toLocaleDateString("en-US", options);
   }
 
   function convertData(inputArray: any) {
-    console.log("INside function", inputArray);
-    console.log(
-      inputArray.map((item: any) => ({
-        date: formatDate(item.date),
-        weight: item.commits,
-      })),
-    );
     return inputArray.map((item: any) => ({
       date: formatDate(item.date),
       weight: item.commits,
@@ -59,7 +44,6 @@ export default function Stories() {
     const getData = async (email: string | null) => {
       if (email) {
         try {
-          // Replace with your async function to get details
           const data = await getStories(email);
           const dataDetails = await getDetails(email);
           setCurrentStreak(dataDetails.currentStreak);
@@ -68,7 +52,6 @@ export default function Stories() {
           const convertedHeatmap = convertData(dataDetails.heatMap);
           setStories(data);
           setHeatmap(convertedHeatmap);
-          console.log(convertedHeatmap);
         } catch (error) {
           console.error("Error fetching details:", error);
         }
@@ -113,52 +96,61 @@ export default function Stories() {
     "text-white hover:text-white bg-green-400 hover:bg-green-400",
   ];
 
-  console.log("Heatmap in Render:", heatmap);
-  console.log(
-    heatmap.map((item: any) => ({
-      date: new Date(item.date),
-      weight: item.weight,
-    })),
-  );
-
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <div className="container mx-auto">
-        <div className="flex container mx-auto justify-between mt-8">
-          <h1 className="text-4xl font-bold">Hello {username}</h1>
-          <Button onClick={handleCreate}>Create Story</Button>
+      <div className="container mx-auto flex flex-col items-center mt-8">
+        <h1 className="text-4xl font-bold text-center">Hello {username}</h1>
+        <Button onClick={handleCreate} className="mt-4">
+          Create Story
+        </Button>
+
+        <div className="mt-8 w-full flex flex-col items-center">
+          <h2 className="text-2xl font-semibold">{`Today's Stories`}</h2>
+          <div className="flex flex-col p-4 gap-4 w-full max-w-2xl">
+            {stories.map((item: any) => (
+              <div
+                onClick={() => handleClick(item.id)}
+                key={item.id}
+                className="flex gap-4 items-center border border-white p-4 rounded"
+              >
+                <div>{item.title}</div>
+                <div>
+                  {item.visibility === "Public" ? <FaUnlock /> : <FaLock />}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="mt-8">Todays Stories</div>
-        <div className="flex flex-col p-4 gap-4">
-          {stories.map((item: any) => (
-            <div
-              onClick={() => handleClick(item.id)}
-              key={item.id}
-              className="flex gap-4 items-center border border-white p-4 rounded"
-            >
-              <div>{item.title}</div>
-              <div>
-                {item.visibility === "Public" ? <FaUnlock /> : <FaLock />}
+
+        <div className="mt-8 flex flex-col items-center gap-8">
+          <div className="flex gap-8 flex-wrap justify-center">
+            <div className="flex flex-col items-center">
+              <div className="w-24 h-24 rounded-full bg-white/20 border-2 border-white ring-2 ring-white text-white flex items-center justify-center">
+                <div className="text-lg font-bold">{storyCount}</div>
+              </div>
+              <div className="mt-2 text-center text-sm font-semibold text-white">
+                Total Stories
               </div>
             </div>
-          ))}
-        </div>
-        <div className="mt-8 flex w-fit flex-col md:flex-row">
-          <div className="flex gap-8 border-slate-100 border-2 bg-secondary p-4 rounded-lg">
             <div className="flex flex-col items-center">
-              <div>Total Stories</div>
-              <div>{storyCount}</div>
+              <div className="w-24 h-24 rounded-full bg-white/20 border-2 border-white ring-2 ring-white text-white flex items-center justify-center">
+                <div className="text-lg font-bold">{currentStreak}</div>
+              </div>
+              <div className="mt-2 text-center text-sm font-semibold text-white">
+                Current Streak
+              </div>
             </div>
             <div className="flex flex-col items-center">
-              <div>Current Streak</div>
-              <div>{currentStreak}</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div>Longest Streak</div>
-              <div>{highestStreak}</div>
+              <div className="w-24 h-24 rounded-full bg-white/20 border-2 border-white ring-2 ring-white text-white flex items-center justify-center">
+                <div className="text-lg font-bold">{highestStreak}</div>
+              </div>
+              <div className="mt-2 text-center text-sm font-semibold text-white">
+                Longest Streak
+              </div>
             </div>
           </div>
         </div>
+
         {heatmap.length > 0 && (
           <CalendarHeatmap
             className="mt-8"
